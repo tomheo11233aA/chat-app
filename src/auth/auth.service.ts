@@ -48,7 +48,7 @@ export class AuthService {
         }
     }
 
-    async updateProfile(userId: string, @Body() updateProfileDto: UpdateProfileDto): Promise<IUser> {
+    async updateProfile(userId: string, updateProfileDto: UpdateProfileDto): Promise<IUser> {
         const user = await this.userModel.findById(userId).exec();
         if (!user) throw new HttpException('User not found', 404);
         try {
@@ -131,7 +131,7 @@ export class AuthService {
         return otp;
     }
 
-    async verifyOTP(@Body() body: { userId: string, otp: string }): Promise<any> {
+    async verifyOTP(body: { userId: string, otp: string }): Promise<any> {
         const otp = await this.otpModel.findOne({ idUser: body.userId, otp: body.otp }).exec();
         if (!otp) throw new HttpException('Invalid OTP', 400);
         if (otp.isExpired) throw new HttpException('OTP is expired', 400);

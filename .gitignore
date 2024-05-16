@@ -34,5 +34,5 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# environment từ config => env.ts
-./src/config/env.ts
+# environment
+.env

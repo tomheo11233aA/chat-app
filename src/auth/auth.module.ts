@@ -8,6 +8,7 @@ import { LocalStrategy } from 'src/strategies/local.strategy';
 import { JwtStrategy } from 'src/strategies/jwt.strategy';
 import { UserSchema } from 'src/schemas/user.schema';
 import { OTPSchema } from 'src/schemas/otp.schema';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -15,10 +16,18 @@ import { OTPSchema } from 'src/schemas/otp.schema';
       { name: 'User', schema: UserSchema },
       { name: 'OTP', schema: OTPSchema },
     ]),
-PassportModule,
-  JwtModule.register({ secret: 'tomheo11233', signOptions: { expiresIn: '1d' } }),
+    PassportModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get('JWT_SECRET'),
+        signOptions: { expiresIn: '1d' },
+      }),
+    }),
+    ConfigModule,
   ],
-controllers: [AuthController],
+  controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy],
 })
 export class AuthModule { }
